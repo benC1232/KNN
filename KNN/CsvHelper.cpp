@@ -46,4 +46,5 @@ std::vector<Classifiable> CsvHelper::csvToClassifiable(std::string path)
 		std::string errMessage = "could not open file: " + path;
 		throw std::exception(errMessage.c_str());
 	}
+	return content;
 }
