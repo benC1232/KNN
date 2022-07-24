@@ -1,9 +1,43 @@
 #include "Classifiable.h"
 #include <cmath>
+#include <map>
+
+#include <algorithm>
 Classifiable::Classifiable(std::vector<float> values, std::string type)
 {
 	this->_type = type;
 	this->_values = values;
+}
+
+std::string Classifiable::classify(std::vector<Classifiable> training, int k, int type)
+{
+	int distance;
+	std::vector<std::pair<std::string, int>> distances;
+	for (Classifiable neighbor : training)
+	{
+		switch (type)
+		{
+		case euclidean:
+			distance = this->euclideanDistance(neighbor);
+			break;
+		case chebyshev:
+			distance = this->chebyshevDistance(neighbor);
+			break;
+		case manhattan:
+			distance = this->chebyshevDistance(neighbor);
+			break;
+		}
+		distances.push_back(std::pair<std::string, float>(neighbor.getType(), distance));
+	}
+	std::sort(distances.begin(), distances.end(), [](auto& left, auto& right) {
+		return left.second < right.second;
+		});
+	distances.resize(k);
+}
+
+std::string Classifiable::getType()
+{
+	return this->_type;
 }
 
 float Classifiable::euclideanDistance(Classifiable& other)
